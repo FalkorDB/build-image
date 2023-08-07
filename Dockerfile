@@ -1,21 +1,15 @@
 FROM ubuntu:latest
 
+# add redis's repository to apt
+RUN apt-get update -y
+RUN apt-get install lsb-release curl gpg -y
+RUN curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/redis.list
+
 RUN apt-get update -y
 
 # install dependencies
-RUN apt-get install build-essential wget libtool git autoconf automake cmake python3 pip peg lcov -y
-
-# install redis
-RUN wget http://download.redis.io/redis-stable.tar.gz
-RUN tar -xzvf redis-stable.tar.gz
-RUN cd redis-stable && make install
-
-# return to root
-WORKDIR /
-
-# remove redis source
-RUN rm -rf redis
-RUN rm ./redis-stable.tar.gz
+RUN apt-get install build-essential wget redis libtool git autoconf automake cmake python3 pip peg lcov -y
 
 # install python requirements
 RUN pip install --user redis redisgraph-bulk-loader click behave pathos

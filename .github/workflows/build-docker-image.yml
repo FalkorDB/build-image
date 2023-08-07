@@ -21,8 +21,4 @@ jobs:
         run: docker buildx create --name multiarch --use
 
       - name: build docker image
-        #run: docker build --platform linux/amd64,linux/arm64 -t swilly22/falkordb-build:latest .
-        run: docker buildx build . --platform linux/amd64,linux/arm64 --tag swilly22/falkordb-build:latest
-
-      - name: docker push
-        run: docker push swilly22/falkordb-build:latest
+        run: docker buildx build . --platform linux/amd64,linux/arm64 --tag swilly22/falkordb-build:latest --push
