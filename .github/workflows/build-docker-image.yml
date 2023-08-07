@@ -1,0 +1,24 @@
+name: Publish build image
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: docker login
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+
+      - name: build docker image
+        run: docker build -t falkordb-build .
+
+      - name: docker push
+        run: docker push swilly22/falkorbd-build:latest
