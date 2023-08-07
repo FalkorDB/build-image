@@ -18,7 +18,7 @@ jobs:
         run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
       - name: build docker image
-        run: docker build -t swilly22/falkordb-build:latest .
+        run: docker build --platform linux/amd64 -t swilly22/falkordb-build:latest .
 
       - name: docker push
         run: docker push swilly22/falkordb-build:latest
