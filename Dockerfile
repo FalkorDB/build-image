@@ -20,7 +20,7 @@ RUN echo \
 
 # install dependencies
 RUN apt-get update -y && \
-	apt-get install build-essential clang wget redis libtool git autoconf automake cmake python3 pip peg lcov -y && \
+	apt-get install build-essential clang libomp-dev wget redis libtool git autoconf automake cmake python3 pip peg lcov -y && \
 	apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
 # install python requirements
