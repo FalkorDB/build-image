@@ -1,4 +1,4 @@
-FROM redis:7.2
+FROM ubuntu:latest
 
 RUN apt-get update -y
 
