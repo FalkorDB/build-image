@@ -23,6 +23,9 @@ RUN apt-get update -y && \
 	apt-get install build-essential clang libomp-dev wget redis libtool git autoconf automake cmake python3 pip peg lcov openssl libssl-dev -y && \
 	apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
+# upgrade pip
+RUN pip install --upgrade pip
+
 # install python requirements
 RUN pip install redis redisgraph-bulk-loader click behave pathos async_timeout neo4j==5.12.0 && \
 	pip install git+https://github.com/renatahodovan/grammarinator.git@7dace5450b7136d641d065f649b406a22ef4d7f7 && \
