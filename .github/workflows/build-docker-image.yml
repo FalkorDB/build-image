@@ -21,13 +21,25 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v4
+      - name: Build and push ubuntu image
+        uses: docker/build-push-action@v5
         with:
           context: .
+          file: Dockerfile.ubuntu
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: falkordb/falkordb-build:latest
+          tags: falkordb/falkordb-build:ubuntu
+
+      - name: Build and push alpine image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.alpine
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: falkordb/falkordb-build:alpine
 
