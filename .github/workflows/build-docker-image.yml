@@ -27,13 +27,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push ${{ matrix.platform }} image
+      - name: Build and push ${{ matrix.os }} image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Dockerfile.${{ matrix.platform }}
+          file: Dockerfile.${{ matrix.os }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: falkordb/falkordb-build:${{ matrix.platform }}
+          tags: falkordb/falkordb-build:${{ matrix.os }}
