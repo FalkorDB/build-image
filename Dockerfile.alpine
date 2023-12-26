@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 # install dependencies
-RUN apk add bash curl docker redis libtool git autoconf automake cmake make gcc g++ python3-dev py3-pip openssl-dev openmp-dev clang wget linux-headers
+RUN apk add bash curl docker redis libtool git autoconf automake cmake make gcc g++ python3-dev py3-pip openssl-dev openmp-dev clang compiler-rt wget linux-headers
 RUN apk add lcov peg --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
 # libc6-dbg
 
