@@ -12,7 +12,7 @@ jobs:
       matrix:
         os:
           - ubuntu
-          - alpine
+          - debian
 
     steps:
       - name: Checkout
