@@ -1,36 +1,4 @@
 FROM debian:bookworm-slim
 
 RUN apt-get update -y
-
-# add redis's repository to apt
-RUN apt-get install ca-certificates gnupg lsb-release curl gpg -y && \
-	curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg && \
-	echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/redis.list
-
-# Add Docker’s official GPG key:
-RUN install -m 0755 -d /etc/apt/keyrings && \
-curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
-chmod a+r /etc/apt/keyrings/docker.gpg
-
-# Use the following command to set up the repository:
-RUN echo \
-  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-    "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-	  tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-# install dependencies
-RUN apt-get update -y && \
-	apt-get install build-essential clang libomp-dev libc6-dbg wget redis libtool git autoconf automake cmake python3 python3-venv pip peg lcov openssl libssl-dev -y && \
-	apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
-
-# install python requirements
-RUN python3 -m venv ./venv && . ./venv/bin/activate && pip install --upgrade pip && \
-	pip install FalkorDB redis falkordb-bulk-loader click behave pathos async_timeout neo4j==5.12.0 && \
-	pip install git+https://github.com/renatahodovan/grammarinator.git@7dace5450b7136d641d065f649b406a22ef4d7f7 && \
-	pip install git+https://github.com/RedisLabsModules/RLTest.git@master
-
-# install rust
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-
-# add rust to path
-ENV PATH="/root/.cargo/bin:${PATH}"
+RUN apt-get install -y build-essential cmake m4 automake peg libtool autoconf python3 python3-pip git peg lcov openssl libssl-dev
