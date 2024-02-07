@@ -1,4 +1,9 @@
 FROM debian:bookworm-slim
 
-RUN apt-get update -y
-RUN apt-get install -y build-essential cmake m4 automake peg libtool autoconf python3 python3-pip git peg lcov openssl libssl-dev
+RUN apt-get update -y && apt-get install -y build-essential cmake m4 automake peg libtool autoconf python3 python3-pip git peg lcov openssl libssl-dev
+
+# install rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+# add rust to path
+ENV PATH="/root/.cargo/bin:${PATH}"
