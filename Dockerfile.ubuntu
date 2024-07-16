@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as base
+FROM ubuntu:jammy AS base
 
 RUN apt update -y && apt install -y \
     automake build-essential cmake curl git \
