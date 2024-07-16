@@ -33,7 +33,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 RUN apt autoremove -y && apt clean
 
 # Delete doc directory as it is unneeded and heavy
-RUN rm -r /usr/share/doc /root/.rustup/toolchains/1.77-$(uname -m)-unknown-linux-gnu/share/doc
+RUN rm -r /usr/share/doc /root/.rustup/toolchains/${TOOLCHAIN_VERSION}-$(uname -m)-unknown-linux-gnu/share/doc
 
 FROM scratch
 COPY --from=base / /
