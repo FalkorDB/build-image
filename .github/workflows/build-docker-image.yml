@@ -27,6 +27,15 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Set tag name based on branch
+        id: set-tag-name
+        run: |
+            if [ "${{ github.ref_name }}" = "main" ]; then
+              echo "tag_name=falkordb-build:${{ matrix.os }}" >> $GITHUB_OUTPUT
+            else
+              echo "tag_name=falkordb-build:${{ github.ref_name }}-${{ matrix.os }}" >> $GITHUB_OUTPUT
+            fi
+
       - name: Build and push ${{ matrix.os }} image
         uses: docker/build-push-action@v6
         with:
@@ -36,4 +45,4 @@ jobs:
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: falkordb/falkordb-build:${{ matrix.os }}
+          tags: falkordb/${{ steps.set-tag-name.outputs.tag_name }}
