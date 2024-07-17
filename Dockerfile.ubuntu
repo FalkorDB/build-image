@@ -1,4 +1,4 @@
-FROM ubuntu:jammy AS base
+FROM phusion/baseimage:jammy-1.0.4 AS base
 
 RUN apt update -y && apt install -y \
     automake build-essential cmake curl docker-buildx \
