@@ -2,9 +2,9 @@ FROM phusion/baseimage:jammy-1.0.4 AS base
 
 RUN apt update -y && apt install -y \
     automake build-essential cmake curl docker-buildx \
-    docker-compose-v2 git gnupg lcov libssl-dev libtool \
-    lsb-release m4 openssl peg pkgconf python3 python3-pip \
-    python3-venv software-properties-common wget
+    docker-compose-v2 git gnupg lcov libc6-dbg libssl-dev \
+    libtool lsb-release m4 openssl peg pkgconf python3 \
+    python3-pip python3-venv software-properties-common wget
 
 RUN apt upgrade -y
 
