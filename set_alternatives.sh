@@ -1,6 +1,12 @@
 #! /bin/bash
 
+set -e
+
 LLVM_VERSION=$1
+if [ -z "$LLVM_VERSION" ]; then
+    echo "Usage: $0 <llvm_version>"
+    exit 1
+fi
 
 update-alternatives --install /usr/bin/clang clang "/usr/bin/clang-${LLVM_VERSION}" 100
 update-alternatives --install /usr/bin/clang++ clang++ "/usr/bin/clang++-${LLVM_VERSION}" 100
