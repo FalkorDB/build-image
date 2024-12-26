@@ -13,6 +13,7 @@ jobs:
         os:
           - ubuntu
           - debian
+          - rhel
 
     steps:
       - name: Checkout
