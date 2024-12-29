@@ -6,6 +6,9 @@ RUN yum update -y && \
   alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1 && \
   alternatives --auto python3
 
+# create symlinks
+RUN ln -s $(which aclocal) /usr/local/bin/aclocal-1.14 && ln -s $(which automake) /usr/local/bin/automake-1.14
+
 # install rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
@@ -27,7 +30,3 @@ RUN wget https://download.redis.io/redis-stable.tar.gz && \
   make && \
   make install && \
   cd ..
-
-# Add link to not found tools
-RUN ln -s aclocal /usr/bin/aclocal-1.14 && \
-  ln -s automake /usr/bin/automake-1.14
