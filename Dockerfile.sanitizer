@@ -1,0 +1,25 @@
+FROM falkordb/falkordb-build:ubuntu AS builder
+
+RUN rm -rf /root/.rustup && \
+    rustup default nightly
+
+
+FROM falkordb/falkordb-build:ubuntu AS runtime
+
+RUN apt-get update && \
+    apt-get install -y lsb-release wget software-properties-common gnupg && \
+    wget https://apt.llvm.org/llvm.sh && \
+    chmod +x llvm.sh && \
+    ./llvm.sh 17 && \
+    apt-get update && \
+    apt-get install -y libomp-17-dev libc6-dbg python3-venv && \
+    python3 -m venv venv && \
+    update-alternatives \
+    --verbose \
+    --install /usr/bin/clang                clang                /usr/bin/clang-17 100 \
+    --slave   /usr/bin/clang++              clang++              /usr/bin/clang++-17
+
+# copy rust from builder
+COPY --from=builder /root/.rustup /root/.rustup
+
+CMD ["/bin/bash"]

@@ -26,3 +26,20 @@ RUN wget https://download.redis.io/redis-stable.tar.gz && \
   make && \
   make install && \
   cd ..
+
+
+FROM redhat/ubi9 as runtime
+RUN yum update -y && \
+  yum install -y wget autoconf automake python3.11 python3.11-pip libtool git make openssl-devel gcc gcc-c++ libstdc++-static diffutils cmake3 && \
+  alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 && \
+  alternatives --auto python3 && \
+  yum clean all && rm -rf /var/cache/yum
+
+# copy rust from builder
+COPY --from=builder /root/.cargo /root/.cargo
+COPY --from=builder /root/.rustup /root/.rustup
+COPY --from=builder /usr/local/bin/peg /usr/local/bin/peg
+# copy redis from builder
+COPY --from=builder /usr/local/bin/redis* /usr/local/bin/
+# add rust to path
+ENV PATH="/root/.cargo/bin:${PATH}"
