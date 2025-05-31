@@ -1,11 +1,11 @@
 name: Build sanitizer image
 
 on:
-    workflow_dispatch:
-    workflow_run:
-        workflows: ["Build image"]
-        types:
-            - completed
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Build image"]
+    types:
+      - completed
 
 jobs:
     docker:
