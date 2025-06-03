@@ -6,7 +6,7 @@ RUN yum update -y && \
   alternatives --auto python3
 
 # install rust
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
 
 # add rust to path
 ENV PATH="/root/.cargo/bin:${PATH}"
@@ -37,6 +37,7 @@ RUN yum update -y && \
 
 # copy rust from builder
 COPY --from=builder /root/.cargo /root/.cargo
+COPY --from=builder /root/.rustup /root/.rustup
 COPY --from=builder /usr/local/bin/peg /usr/local/bin/peg
 # copy redis from builder
 COPY --from=builder /usr/local/bin/redis* /usr/local/bin/
