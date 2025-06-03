@@ -1,7 +1,6 @@
 FROM falkordb/falkordb-build:ubuntu AS builder
 
-RUN rm -rf /root/.rustup && \
-    rustup default nightly
+RUN rustup default nightly
 
 
 FROM falkordb/falkordb-build:ubuntu AS runtime
