@@ -30,7 +30,7 @@ RUN wget https://download.redis.io/redis-stable.tar.gz && \
 
 FROM redhat/ubi9 as runtime
 RUN yum update -y && \
-  yum install -y wget autoconf automake python3.11 python3.11-pip libtool git make openssl-devel gcc gcc-c++ libstdc++-static diffutils cmake3 && \
+  yum install -y wget autoconf automake python3.11 python3.11-pip libtool git make openssl-devel gcc gcc-c++ libstdc++-static diffutils cmake3 docker && \
   alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 && \
   alternatives --auto python3 && \
   yum clean all && rm -rf /var/cache/yum
