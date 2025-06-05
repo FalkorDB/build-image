@@ -1,6 +1,15 @@
 FROM ubuntu:22.04 as builder
 
-RUN apt-get update -y && apt-get install -y curl build-essential cmake m4 automake peg libtool autoconf python3 python3-pip git lcov openssl libssl-dev
+RUN apt-get update -y && apt-get install -y curl ca-certificates build-essential cmake m4 automake peg libtool autoconf python3 python3-pip git lcov openssl libssl-dev && \
+    install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc && \
+    chmod a+r /etc/apt/keyrings/docker.asc && \
+    echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+    tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update -y && \
+    apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 # install rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
@@ -11,11 +20,12 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 
 FROM ubuntu:22.04 as runtime
 
-RUN apt-get update -y && apt-get install -y curl build-essential cmake m4 automake peg libtool autoconf python3 python3-pip git lcov openssl libssl-dev docker && \
+RUN apt-get update -y && apt-get install -y curl build-essential cmake m4 automake peg libtool autoconf python3 python3-pip git lcov openssl libssl-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # copy rust from builder
 COPY --from=builder /root/.cargo /root/.cargo
+COPY --from=builder /usr/bin/docker* /usr/bin/
 
 # add rust to path
 ENV PATH="/root/.cargo/bin:${PATH}"
