@@ -1,6 +1,6 @@
 FROM falkordb/falkordb-build:ubuntu AS builder
 
-RUN rustup default nightly
+RUN rustup install nightly --profile minimal
 
 
 FROM falkordb/falkordb-build:ubuntu AS runtime
@@ -12,6 +12,8 @@ RUN apt-get update && \
     ./llvm.sh 17 && \
     apt-get update && \
     apt-get install -y libomp-17-dev libc6-dbg python3-venv && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
     python3 -m venv venv && \
     update-alternatives \
     --verbose \
