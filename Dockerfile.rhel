@@ -5,12 +5,6 @@ RUN yum update -y && \
   alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 && \
   alternatives --auto python3
 
-# install rust
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
-
-# add rust to path
-ENV PATH="/root/.cargo/bin:${PATH}"
-
 # install leg/geg
 RUN wget https://www.piumarta.com/software/peg/peg-0.1.19.tar.gz && \
   tar -xzvf peg-0.1.19.tar.gz && \
@@ -29,17 +23,13 @@ RUN wget https://download.redis.io/redis-stable.tar.gz && \
 
 
 FROM redhat/ubi9 as runtime
+
 RUN yum update -y && \
   yum install -y wget autoconf automake python3.11 python3.11-pip libtool git make openssl-devel gcc gcc-c++ libstdc++-static diffutils cmake3 && \
   alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 && \
   alternatives --auto python3 && \
   yum clean all && rm -rf /var/cache/yum
-
-# copy rust from builder
-COPY --from=builder /root/.cargo /root/.cargo
+  
 COPY --from=builder /usr/local/bin/peg /usr/local/bin/peg
 # copy redis from builder
 COPY --from=builder /usr/local/bin/redis* /usr/local/bin/
-COPY --from=builder /root/.rustup /root/.rustup
-# add rust to path
-ENV PATH="/root/.cargo/bin:${PATH}"
