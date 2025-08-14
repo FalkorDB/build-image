@@ -35,12 +35,12 @@ RUN wget https://www.piumarta.com/software/peg/peg-0.1.19.tar.gz && \
     make && make install && \
     cd .. && rm -rf peg-0.1.19*
 
-# Install Redis
-RUN wget https://download.redis.io/redis-stable.tar.gz && \
-    tar -xzvf redis-stable.tar.gz && \
-    cd redis-stable && \
-    make && make install && \
-    cd .. && rm -rf redis-stable*
+# # Install Redis
+# RUN wget https://download.redis.io/redis-stable.tar.gz && \
+#     tar -xzvf redis-stable.tar.gz && \
+#     cd redis-stable && \
+#     make && make install && \
+#     cd .. && rm -rf redis-stable*
 
 
 # Default shell
