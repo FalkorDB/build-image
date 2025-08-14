@@ -1,28 +1,47 @@
+#########################################
+# Stage 1: Build GCC 11 on AlmaLinux 8 #
+#########################################
+FROM almalinux:8 as gcc-builder
+
+# Install module tools and GCC 11
+RUN dnf update -y && dnf install gcc-toolset-11 -y
+
+#########################################
+# Stage 2: Final UBI8 Image            #
+#########################################
 FROM redhat/ubi8 as builder
 
+# Install dependencies (without gcc, we'll copy it)
 RUN yum update -y && \
-  yum install -y wget autoconf automake python3.11 python3.11-pip libtool git make openssl-devel gcc gcc-c++ libstdc++-static diffutils cmake3 && \
-  alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 && \
-  alternatives --auto python3
+    yum install -y wget autoconf automake python3.11 python3.11-pip \
+                   libtool git make openssl-devel libstdc++-static diffutils cmake3 gcc-c++ && \
+    alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 && \
+    alternatives --auto python3 && \
+    yum clean all
 
-# install rust
+# Copy GCC 11 from AlmaLinux build
+COPY --from=gcc-builder /opt/rh /opt/rh
+ENV PATH=/opt/rh/gcc-toolset-11/root/usr/bin:$PATH
+ENV LD_LIBRARY_PATH=/opt/rh/gcc-toolset-11/root/usr/lib64:$LD_LIBRARY_PATH
+
+# Install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-
-# add rust to path
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-# install leg/geg
+# Install PEG
 RUN wget https://www.piumarta.com/software/peg/peg-0.1.19.tar.gz && \
-  tar -xzvf peg-0.1.19.tar.gz && \
-  cd peg-0.1.19 && \
-  make && \
-  make install && \
-  cd ..
+    tar -xzvf peg-0.1.19.tar.gz && \
+    cd peg-0.1.19 && \
+    make && make install && \
+    cd .. && rm -rf peg-0.1.19*
 
-# install redis
-RUN wget https://download.redis.io/redis-stable.tar.gz && \
-  tar -xzvf redis-stable.tar.gz && \
-  cd redis-stable && \
-  make && \
-  make install && \
-  cd ..
+# # Install Redis
+# RUN wget https://download.redis.io/redis-stable.tar.gz && \
+#     tar -xzvf redis-stable.tar.gz && \
+#     cd redis-stable && \
+#     make && make install && \
+#     cd .. && rm -rf redis-stable*
+
+
+# Default shell
+CMD ["/bin/bash"]
