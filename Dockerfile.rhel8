@@ -42,8 +42,6 @@ RUN wget https://download.redis.io/redis-stable.tar.gz && \
     make && make install && \
     cd .. && rm -rf redis-stable*
 
-# Set working directory
-WORKDIR /workspace
 
 # Default shell
 CMD ["/bin/bash"]
