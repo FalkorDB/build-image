@@ -1,7 +1,8 @@
-name: Build image
+name: Build test image
 
 on:
-  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 jobs:
@@ -14,7 +15,6 @@ jobs:
           - ubuntu
           - debian
           - rhel
-          - rhel8
 
     steps:
       - name: Checkout
@@ -29,7 +29,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build ${{ github.ref_name == 'main' && 'and push' || ''}} image
+      - name: Build test image
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -37,5 +37,5 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
-          push: ${{ github.ref_name == 'main' }}
-          tags: falkordb/falkordb-build:${{ matrix.os }}
+          push: true
+          tags: falkordb/falkordb-build:${{ matrix.os }}-${{ github.sha }}
