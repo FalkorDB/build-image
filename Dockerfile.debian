@@ -3,10 +3,12 @@ FROM debian:bookworm-slim
 RUN apt-get update -y && apt-get install -y git wget build-essential lcov openssl libssl-dev python3 python3-venv rsync unzip curl m4 automake peg libtool autoconf python3-pip
 
 # Install CMake 3.25.1
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-linux-x86_64.sh && \
-    chmod +x cmake-3.25.1-linux-x86_64.sh && \
-    ./cmake-3.25.1-linux-x86_64.sh --skip-license --prefix=/usr/local && \
-    rm cmake-3.25.1-linux-x86_64.sh
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "aarch64" ]; then ARCH="aarch64"; else ARCH="x86_64"; fi && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-linux-${ARCH}.sh && \
+    chmod +x cmake-3.25.1-linux-${ARCH}.sh && \
+    ./cmake-3.25.1-linux-${ARCH}.sh --skip-license --prefix=/usr/local && \
+    rm cmake-3.25.1-linux-${ARCH}.sh
 
 # install rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
