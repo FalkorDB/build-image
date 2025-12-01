@@ -35,8 +35,10 @@ jobs:
         with:
           context: .
           file: Dockerfile.${{ matrix.os }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: |
+            type=gha,scope=${{ matrix.os }}-${{ github.ref_name }}
+            type=gha,scope=${{ matrix.os }}-main
+          cache-to: type=gha,mode=max,scope=${{ matrix.os }}-${{ github.ref_name }}
           platforms: linux/amd64,linux/arm64
           push: ${{ github.ref_name == 'main' }}
           tags: falkordb/falkordb-build:${{ matrix.os }}
