@@ -15,11 +15,21 @@ RUN apk add --no-cache \
     libtool \
     autoconf \
     openssl-dev \
-    cmake \
     rust \
     cargo \
     bsd-compat-headers \
+    linux-headers \
     build-base # Essential for compiling C/C++ projects
+
+# Install cmake-3.25.1 from source
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1.tar.gz && \
+    tar -xzf cmake-3.25.1.tar.gz && \
+    cd cmake-3.25.1 && \
+    ./bootstrap --parallel=$(nproc) && \
+    make -j$(nproc) && \
+    make install && \
+    cd .. && \
+    rm -rf cmake-3.25.1 cmake-3.25.1.tar.gz
 
 # Activate pyenv
 RUN python3 -m venv /venv
