@@ -1,5 +1,8 @@
 FROM alpine:latest AS builder
 
+# Workaround for QEMU emulation issues with apk triggers
+RUN apk upgrade --no-cache apk-tools || true
+
 # Install build tools and dependencies for Alpine
 RUN apk add --no-cache \
     git \
