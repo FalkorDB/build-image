@@ -1,10 +1,10 @@
 FROM alpine:latest AS builder
 
 # Install build tools and dependencies for Alpine
-RUN apk add --no-cache \
+# Using --no-scripts to avoid trigger issues in QEMU emulation
+RUN apk add --no-cache --no-scripts \
     git \
     bash \
-    busybox \
     python3 \
     py3-pip \
     ca-certificates \
@@ -15,11 +15,28 @@ RUN apk add --no-cache \
     libtool \
     autoconf \
     openssl-dev \
-    cmake \
     rust \
     cargo \
     bsd-compat-headers \
-    build-base # Essential for compiling C/C++ projects
+    linux-headers \
+    build-base && \
+    # Manually update CA certificates since we skipped triggers
+    update-ca-certificates || true
+
+# Install cmake-3.25.1 pre-built binary
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then \
+        CMAKE_ARCH="x86_64"; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+        CMAKE_ARCH="aarch64"; \
+    else \
+        echo "Unsupported architecture: $ARCH" && exit 1; \
+    fi && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-linux-${CMAKE_ARCH}.tar.gz && \
+    tar -xzf cmake-3.25.1-linux-${CMAKE_ARCH}.tar.gz && \
+    cp -r cmake-3.25.1-linux-${CMAKE_ARCH}/bin/* /usr/local/bin/ && \
+    cp -r cmake-3.25.1-linux-${CMAKE_ARCH}/share/* /usr/local/share/ && \
+    rm -rf cmake-3.25.1-linux-${CMAKE_ARCH} cmake-3.25.1-linux-${CMAKE_ARCH}.tar.gz
 
 # Activate pyenv
 RUN python3 -m venv /venv
@@ -28,6 +45,6 @@ ENV PATH="/venv/bin:$PATH"
 
 RUN pip install --disable-pip-version-check setuptools --upgrade
 
-RUN apk add --no-cache minipeg
+RUN apk add --no-cache --no-scripts minipeg
 
 RUN ln -s $(which minipeg) /usr/local/bin/leg || ln -s $(which minipeg) /usr/bin/leg || (echo "Could not create symlink for leg. Check minipeg path." && exit 1)
