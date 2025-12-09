@@ -23,15 +23,20 @@ RUN apk add --no-cache --no-scripts \
     # Manually update CA certificates since we skipped triggers
     update-ca-certificates || true
 
-# Install cmake-3.25.1 from source
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1.tar.gz && \
-    tar -xzf cmake-3.25.1.tar.gz && \
-    cd cmake-3.25.1 && \
-    ./bootstrap --parallel=$(nproc) && \
-    make -j$(nproc) && \
-    make install && \
-    cd .. && \
-    rm -rf cmake-3.25.1 cmake-3.25.1.tar.gz
+# Install cmake-3.25.1 pre-built binary
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then \
+        CMAKE_ARCH="x86_64"; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+        CMAKE_ARCH="aarch64"; \
+    else \
+        echo "Unsupported architecture: $ARCH" && exit 1; \
+    fi && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-linux-${CMAKE_ARCH}.tar.gz && \
+    tar -xzf cmake-3.25.1-linux-${CMAKE_ARCH}.tar.gz && \
+    cp -r cmake-3.25.1-linux-${CMAKE_ARCH}/bin/* /usr/local/bin/ && \
+    cp -r cmake-3.25.1-linux-${CMAKE_ARCH}/share/* /usr/local/share/ && \
+    rm -rf cmake-3.25.1-linux-${CMAKE_ARCH} cmake-3.25.1-linux-${CMAKE_ARCH}.tar.gz
 
 # Activate pyenv
 RUN python3 -m venv /venv
