@@ -36,6 +36,9 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1
     rm -rf cmake-3.25.1 cmake-3.25.1.tar.gz && \
     cmake --version
 
+# Install zstd after cmake to use build cache
+RUN apk add --no-cache --no-scripts zstd-dev
+
 # Activate pyenv
 RUN python3 -m venv /venv
 RUN chmod +x /venv/bin/*
