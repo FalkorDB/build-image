@@ -45,6 +45,6 @@ ENV PATH="/venv/bin:$PATH"
 
 RUN pip install --disable-pip-version-check setuptools --upgrade
 
-RUN apk add --no-cache minipeg
+RUN apk add --no-cache --no-scripts minipeg
 
 RUN ln -s $(which minipeg) /usr/local/bin/leg || ln -s $(which minipeg) /usr/bin/leg || (echo "Could not create symlink for leg. Check minipeg path." && exit 1)
