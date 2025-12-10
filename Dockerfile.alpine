@@ -17,26 +17,17 @@ RUN apk add --no-cache --no-scripts \
     autoconf \
     openssl-dev \
     zlib-dev \
+    zstd \
     zstd-dev \
     zstd-static \
     rust \
     cargo \
+    cmake \
     bsd-compat-headers \
     linux-headers \
     build-base && \
     # Manually update CA certificates since we skipped triggers
     update-ca-certificates || true
-
-# Install cmake-3.25.1 from source
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1.tar.gz && \
-    tar -xzf cmake-3.25.1.tar.gz && \
-    cd cmake-3.25.1 && \
-    ./bootstrap --parallel=$(nproc) --prefix=/usr/local && \
-    make -j$(nproc) && \
-    make install && \
-    cd .. && \
-    rm -rf cmake-3.25.1 cmake-3.25.1.tar.gz && \
-    cmake --version
 
 # Activate pyenv
 RUN python3 -m venv /venv
