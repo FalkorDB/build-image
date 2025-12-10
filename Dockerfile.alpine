@@ -17,12 +17,9 @@ RUN apk add --no-cache --no-scripts \
     autoconf \
     openssl-dev \
     zlib-dev \
-    zstd \
     zstd-dev \
-    zstd-static \
     rust \
     cargo \
-    cmake \
     bsd-compat-headers \
     linux-headers \
     build-base && \
@@ -35,6 +32,8 @@ RUN chmod +x /venv/bin/*
 ENV PATH="/venv/bin:$PATH"
 
 RUN pip install --disable-pip-version-check setuptools --upgrade
+
+RUN pip install --break-system-packages cmake==3.25.2
 
 RUN apk add --no-cache --no-scripts minipeg
 
