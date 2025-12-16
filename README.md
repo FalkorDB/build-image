@@ -13,18 +13,26 @@ Build images are available for multiple architectures (amd64, arm64) and operati
 
 ## Versioning
 
-Build images are tagged with version numbers in the format: `falkordb/falkordb-build:$os-$version`
+Build images are tagged based on the branch or git tag:
+
+### Main Branch Builds
+- `falkordb/falkordb-build:ubuntu` - Latest build for ubuntu
+- `falkordb/falkordb-build:ubuntu-edge` - Edge/development build for ubuntu
+
+### Tagged Releases
+- `falkordb/falkordb-build:ubuntu-1.0.0` - Specific version release
 
 Examples:
 - `falkordb/falkordb-build:ubuntu-1.0.0`
-- `falkordb/falkordb-build:alpine-1.0.0`
-- `falkordb/falkordb-build:debian-1.0.0`
+- `falkordb/falkordb-build:alpine-2.1.5`
+- `falkordb/falkordb-build:debian-edge`
 
 ### Release Process
 
-1. Commit and push to `main` branch - this will build and push images with version tags
-2. Alternatively, create a git tag (e.g., `v1.0.0` or `1.0.0`) - this will build and push images with the tag version (the 'v' prefix is automatically stripped)
+To create a versioned release:
 
-Latest builds from the `main` branch are always tagged as `falkordb/falkordb-build:$os` (without version suffix).
+1. Create a git tag with the version number (e.g., `v1.0.0` or `1.0.0`)
+2. Push the tag to GitHub
+3. The CI workflow will automatically build and push images with the version tag
 
-**Note:** When using git tags, the 'v' prefix (if present) is automatically removed. For example, tag `v1.2.3` will create image `falkordb/falkordb-build:ubuntu-1.2.3`.
+**Note:** The 'v' prefix in git tags is automatically stripped. For example, tag `v1.2.3` will create image `falkordb/falkordb-build:ubuntu-1.2.3`.
