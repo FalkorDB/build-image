@@ -20,8 +20,6 @@ Examples:
 - `falkordb/falkordb-build:alpine-1.0.0`
 - `falkordb/falkordb-build:debian-1.0.0`
 
-The version is maintained in the `VERSION` file at the root of this repository.
-
 ### Release Process
 
 1. Commit and push to `main` branch - this will build and push images with version tags
