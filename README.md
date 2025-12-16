@@ -24,9 +24,8 @@ The version is maintained in the `VERSION` file at the root of this repository.
 
 ### Release Process
 
-1. Update the `VERSION` file with the new version number
-2. Commit and push to `main` branch - this will build and push images with version tags
-3. Alternatively, create a git tag (e.g., `v1.0.0` or `1.0.0`) - this will build and push images with the tag version (the 'v' prefix is automatically stripped)
+1. Commit and push to `main` branch - this will build and push images with version tags
+2. Alternatively, create a git tag (e.g., `v1.0.0` or `1.0.0`) - this will build and push images with the tag version (the 'v' prefix is automatically stripped)
 
 Latest builds from the `main` branch are always tagged as `falkordb/falkordb-build:$os` (without version suffix).
 
