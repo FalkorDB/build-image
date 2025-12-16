@@ -40,7 +40,7 @@ jobs:
           TAGS="falkordb/falkordb-build:${{ matrix.os }}"
           if [[ "${{ github.ref_name }}" == "main" ]]; then
             TAGS="${TAGS},falkordb/falkordb-build:${{ matrix.os }}-${{ steps.version.outputs.version }}"
-          elif [[ ${{ startsWith(github.ref, 'refs/tags/') }} ]]; then
+          elif [[ "${{ startsWith(github.ref, 'refs/tags/') }}" == "true" ]]; then
             TAG_VERSION="${{ github.ref_name }}"
             # Strip 'v' prefix if present
             TAG_VERSION="${TAG_VERSION#v}"
