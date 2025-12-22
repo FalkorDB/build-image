@@ -10,6 +10,9 @@ Build images are available for multiple architectures (amd64, arm64) and operati
 - `falkordb/falkordb-build:alpine` - Alpine Linux based image
 - `falkordb/falkordb-build:rhel` - Red Hat UBI 9 based image
 - `falkordb/falkordb-build:rhel8` - Red Hat UBI 8 based image
+- `falkordb/falkordb-build:rhel9` - Red Hat UBI 9 based image
+- `falkordb/falkordb-build:amazonlinux2` - Amazon Linux 2 based image (glibc baseline for AL2)
+- `falkordb/falkordb-build:amazonlinux2023` - Amazon Linux 2023 based image
 
 ## Versioning
 

@@ -16,6 +16,8 @@ jobs:
           - rhel
           - rhel8
           - rhel9
+          - amazonlinux2
+          - amazonlinux2023
           - alpine
 
     steps:
