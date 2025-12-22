@@ -17,11 +17,17 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Install PEG
-RUN wget https://www.piumarta.com/software/peg/peg-0.1.19.tar.gz && \
-    tar -xzvf peg-0.1.19.tar.gz && \
-    cd peg-0.1.19 && \
-    make && make install && \
-    cd .. && rm -rf peg-0.1.19*
+ARG PEG_VERSION=0.1.19
+ARG PEG_SHA256=74d1b7b905dbbc1776502a4ccf9c38ad8b86c9f8e51b825214783eefd5cdc9af
+RUN set -eux; \
+    url="https://github.com/gpakosz/peg/archive/refs/tags/${PEG_VERSION}.tar.gz"; \
+    wget -O peg.tar.gz "$url"; \
+    echo "${PEG_SHA256}  peg.tar.gz" | sha256sum -c -; \
+    tar -xzf peg.tar.gz; \
+    cd "peg-${PEG_VERSION}"; \
+    make && make install; \
+    cd ..; \
+    rm -rf "peg-${PEG_VERSION}" peg.tar.gz
 
 # # Install Redis
 # RUN wget https://download.redis.io/redis-stable.tar.gz && \

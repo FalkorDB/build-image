@@ -1,0 +1,52 @@
+FROM amazonlinux:2 AS builder
+
+RUN set -eux; \
+    yum update -y; \
+    yum install -y \
+      git \
+      wget \
+      curl \
+      ca-certificates \
+      unzip \
+      rsync \
+      m4 \
+      automake \
+      libtool \
+      autoconf \
+      make \
+      diffutils \
+      which \
+      gcc \
+      gcc-c++ \
+      libstdc++-static \
+      openssl \
+      openssl-devel \
+      python3 \
+      python3-pip; \
+    if yum install -y cmake3; then \
+      ln -sf /usr/bin/cmake3 /usr/local/bin/cmake || true; \
+    else \
+      yum install -y cmake; \
+    fi; \
+    yum clean all; \
+    rm -rf /var/cache/yum
+
+# install rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+# add rust to path
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# install leg/geg
+ARG PEG_VERSION=0.1.19
+ARG PEG_SHA256=74d1b7b905dbbc1776502a4ccf9c38ad8b86c9f8e51b825214783eefd5cdc9af
+RUN set -eux; \
+  url="https://github.com/gpakosz/peg/archive/refs/tags/${PEG_VERSION}.tar.gz"; \
+  curl -fsSL -o peg.tar.gz "$url"; \
+  echo "${PEG_SHA256}  peg.tar.gz" | sha256sum -c -; \
+  tar -xzf peg.tar.gz; \
+  cd "peg-${PEG_VERSION}"; \
+  make; \
+  make install; \
+  cd ..; \
+  rm -rf "peg-${PEG_VERSION}" peg.tar.gz
