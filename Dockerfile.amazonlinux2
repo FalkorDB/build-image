@@ -37,6 +37,21 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 # add rust to path
 ENV PATH="/root/.cargo/bin:${PATH}"
 
+# upgrade make to latest from source (system make stays for bootstrap)
+ARG MAKE_VERSION=4.4.1
+ARG MAKE_SHA256=dd16fb1d67bfab79a72f5e8390735c49e3e8e70b4945a15ab1f81ddb78658fb3
+RUN set -eux; \
+  url="https://ftp.gnu.org/gnu/make/make-${MAKE_VERSION}.tar.gz"; \
+  curl -fsSL -o make.tar.gz "$url"; \
+  echo "${MAKE_SHA256}  make.tar.gz" | sha256sum -c -; \
+  tar -xzf make.tar.gz; \
+  cd "make-${MAKE_VERSION}"; \
+  ./configure; \
+  make -j"$(nproc)"; \
+  make install; \
+  cd ..; \
+  rm -rf "make-${MAKE_VERSION}" make.tar.gz
+
 # install leg/geg
 ARG PEG_VERSION=0.1.19
 ARG PEG_SHA256=74d1b7b905dbbc1776502a4ccf9c38ad8b86c9f8e51b825214783eefd5cdc9af
