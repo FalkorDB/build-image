@@ -1,0 +1,32 @@
+FROM redhat/ubi9 as builder
+
+RUN yum update -y && \
+  yum install -y wget autoconf automake python3.11 python3.11-pip libtool git make openssl-devel gcc-toolset-14 libstdc++-static diffutils cmake && \
+  alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 && \
+  alternatives --auto python3
+
+# Enable gcc-toolset-14
+ENV PATH="/opt/rh/gcc-toolset-14/root/usr/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-14/root/usr/lib64:${LD_LIBRARY_PATH}"
+
+# install rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+# add rust to path
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# install leg/geg
+RUN wget https://www.piumarta.com/software/peg/peg-0.1.19.tar.gz && \
+  tar -xzvf peg-0.1.19.tar.gz && \
+  cd peg-0.1.19 && \
+  make && \
+  make install && \
+  cd ..
+
+# install redis
+# RUN wget https://download.redis.io/redis-stable.tar.gz && \
+#   tar -xzvf redis-stable.tar.gz && \
+#   cd redis-stable && \
+#   make && \
+#   make install && \
+#   cd ..

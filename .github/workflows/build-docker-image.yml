@@ -15,6 +15,7 @@ jobs:
           - debian
           - rhel
           - rhel8
+          - rhel9
           - alpine
 
     steps:
