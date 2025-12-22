@@ -23,11 +23,6 @@ RUN set -eux; \
       openssl-devel \
       python3 \
       python3-pip; \
-    if yum install -y cmake3; then \
-      ln -sf /usr/bin/cmake3 /usr/local/bin/cmake || true; \
-    else \
-      yum install -y cmake; \
-    fi; \
     yum clean all; \
     rm -rf /var/cache/yum
 
@@ -36,6 +31,21 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 # add rust to path
 ENV PATH="/root/.cargo/bin:${PATH}"
+
+# install newer cmake from source (system cmake is 3.17.5)
+ARG CMAKE_VERSION=3.27.9
+ARG CMAKE_SHA256=609a9b98572a6a5ea477f912cffb973109ed4d0a6a6b3f9e2353d2cdc048708e
+RUN set -eux; \
+  url="https://cmake.org/files/v3.27/cmake-${CMAKE_VERSION}.tar.gz"; \
+  curl -fsSL -o cmake.tar.gz "$url"; \
+  echo "${CMAKE_SHA256}  cmake.tar.gz" | sha256sum -c -; \
+  tar -xzf cmake.tar.gz; \
+  cd "cmake-${CMAKE_VERSION}"; \
+  ./bootstrap; \
+  make -j"$(nproc)"; \
+  make install; \
+  cd ..; \
+  rm -rf "cmake-${CMAKE_VERSION}" cmake.tar.gz
 
 # upgrade make to latest from source (system make stays for bootstrap)
 ARG MAKE_VERSION=4.4.1
